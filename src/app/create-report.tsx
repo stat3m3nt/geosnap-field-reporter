@@ -1,5 +1,6 @@
 import { View, StyleSheet, Text, Pressable, ScrollView, TextInput} from 'react-native';
 import { useState } from 'react';
+import { Picker } from '@react-native-picker/picker'; 
 
 export default function createReportsScreen(){
     const [category, setCategory] = useState('');
@@ -21,27 +22,17 @@ export default function createReportsScreen(){
             {/* category section */}
             <View style={styles.section}>
                 <Text style={styles.label}>Category</Text>
-                <Text style={styles.subtitle}>(Select the category that best describes the issue.)</Text>
-                <View style={styles.optionRow}>
-                    <Pressable style={[styles.optionButton, category === 'Safety' && styles.selectedOption]} onPress={() => setCategory('Safety')}>
-                        <Text style={[styles.optionText, category === 'Safety' && styles.selectedOptionText]}>Safety</Text>
-                    </Pressable>
-
-                    <Pressable style={[styles.optionButton, category === 'Maintenance' && styles.selectedOption]} onPress={() => setCategory('Maintenance')}>
-                        <Text style={[styles.optionText, category === 'Maintenance' && styles.selectedOptionText]}>Maintenance</Text>
-                    </Pressable>
-
-                    <Pressable style={[styles.optionButton, category === 'Damage' && styles.selectedOption]} onPress={() => setCategory('Damage')}>
-                        <Text style={[styles.optionText, category === 'Damage' && styles.selectedOptionText]}>Damage</Text>
-                    </Pressable>
-
-                    <Pressable style={[styles.optionButton, category === 'Cleanliness' && styles.selectedOption]} onPress={() => setCategory('Cleanliness')}>
-                        <Text style={[styles.optionText, category === 'Cleanliness' && styles.selectedOptionText]}>Cleanliness</Text>
-                    </Pressable>
-
-                    <Pressable style={[styles.optionButton, category === 'Accessibility' && styles.selectedOption]} onPress={() => setCategory('Accessibility')}>
-                        <Text style={[styles.optionText, category === 'Accessibility' && styles.selectedOptionText]}>Accessibility</Text>
-                    </Pressable>
+                <View style={styles.pickerContainer}>
+                    <Picker
+                        selectedValue={category}
+                        onValueChange={(itemValue) => setCategory(itemValue)}
+                        style={styles.picker}
+                    >
+                        <Picker.Item label="Select a category..." value="" />
+                        <Picker.Item label="Safety" value="safety" />
+                        <Picker.Item label="Maintenance" value="maintenance" />
+                        <Picker.Item label="Damage" value="damage" />
+                    </Picker>
                 </View>
             </View>
 
@@ -49,7 +40,7 @@ export default function createReportsScreen(){
             <View style={styles.section}>
                 <Text style={styles.label}>Severity</Text>
                 <Text style={styles.subtitle}>(Indicate the severity level of the issue.)</Text>
-                
+
                 <View style={styles.optionRow}>
                     <Pressable style={[styles.optionButton, severity === 'Low' && styles.selectedOption]} onPress={() => setSeverity('Low')}>
                         <Text style={[styles.optionText, severity === 'Low' && styles.selectedOptionText]}>Low</Text>
@@ -146,7 +137,7 @@ const styles = StyleSheet.create({
     },
     optionText: {
         color: 'gray',
-        fontWeight: '800',
+        fontWeight: '400',
     },
     selectedOptionText: {
         color: 'white',
@@ -169,6 +160,15 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         fontWeight: '600',
+    },
+    pickerContainer:{
+        borderWidth: 1,
+        borderColor: '#1e2a3a',
+        borderRadius: 5,
+        backgroundColor: '#ffffff',
+    },
+    picker: {
+        color: '#1e2a3a',
     },
     
 });
