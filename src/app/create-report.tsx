@@ -1,11 +1,94 @@
-import { View, StyleSheet, Text, Pressable, ScrollView, TextInput} from 'react-native';
-import { useState } from 'react';
-import { Picker } from '@react-native-picker/picker'; 
+import { useRef, useState } from 'react'; // for managing form state and references
+import { 
+    View, 
+    StyleSheet, 
+    Text, 
+    Pressable, 
+    ScrollView, 
+    TextInput,
+    Image,
+    Alert,
+} from 'react-native'; 
+import { Picker } from '@react-native-picker/picker'; // for dropdown selection
+import { CameraView, useCameraPermissions } from 'expo-camera'; // for camera functionality 
 
-export default function createReportsScreen(){
+
+export default function CreateReportsScreen(){
     const [category, setCategory] = useState('');
     const [severity, setSeverity] = useState('');
     const [notes, setNotes] = useState('');
+
+    const [photoURI, setPhotoURI] = useState<string | null>(null); // to store the URI of the captured photo
+    const [showCamera, setShowCamera] = useState(false);
+    const [cameraReady, setCameraReady] = useState(false);
+    
+    const cameraRef = useRef<CameraView | null>(null);
+
+    const [cameraPermission, requestCameraPermission] = useCameraPermissions();
+
+    // Function to handle taking a photo
+    const openCamera = async () => {
+        if (!cameraPermission?.granted) {
+            const permission = await requestCameraPermission();
+            if (!permission.granted) {
+                Alert.alert('Permission Denied', 'Camera access is required to take photos for your reports.');
+                return;
+            }
+        }
+        setShowCamera(true);
+    };
+
+    // Function to capture photo and save URI
+    const takePhoto = async () => {
+        if(!cameraRef.current || !cameraReady) {
+            Alert.alert('Camera Not Ready', 'The camera is not ready yet. Please wait a moment and try again.');
+            return;
+        }
+
+        try {
+            const photo = await cameraRef.current.takePictureAsync();
+            
+            if (photo?.uri) {
+                setPhotoURI(photo.uri);
+                setShowCamera(false);
+            }
+
+        } catch (error) {
+                Alert.alert('Error', 'Failed to take photo. Please try again.');
+                console.log(error);
+        }
+    };
+
+    
+    // Function to retake photo
+    const retakePhoto = () => {
+        setPhotoURI(null);
+        setShowCamera(true);
+    };
+
+    // show camera view if user wants to take a photo, otherwise show the form
+    if (showCamera) { 
+        return (
+            <View style={styles.cameraContainer}>
+                <CameraView
+                    ref={cameraRef}
+                    style={styles.camera}
+                    facing="back"
+                    onCameraReady={() => setCameraReady(true)}
+                />
+                <View style={styles.cameraButtons}>
+                    <Pressable style={styles.cancelButton} onPress={() => setShowCamera(false)}>
+                        <Text style={styles.cancelButtonText}>Cancel</Text>
+                    </Pressable>
+
+                    <Pressable style={styles.captureButton} onPress={takePhoto} disabled={!cameraReady}>
+                        <Text style={styles.captureButtonText}>Capture</Text>
+                    </Pressable>
+                </View> 
+            </View>
+        );
+    }
+    
     return(
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}> Create New Report</Text>
@@ -14,9 +97,19 @@ export default function createReportsScreen(){
             {/* photo section */}
             <View style={styles.section}>
                 <Text style={styles.label}>Photo</Text>
-                <Pressable style={styles.photoButton}>
-                    <Text style={styles.photoButtonText}>Take Photo</Text>
-                </Pressable>
+
+                {photoURI ? (
+                    <View>
+                        <Image source={{ uri: photoURI }} style={styles.previewImage} />
+                        <Pressable style={styles.retakeButton} onPress={retakePhoto}>
+                            <Text style={styles.retakeButtonText}>Retake Photo</Text>
+                        </Pressable>
+                    </View>
+                ) : (
+                    <Pressable style={styles.photoButton} onPress={openCamera}>
+                        <Text style={styles.photoButtonText}>Take Photo</Text>
+                    </Pressable>
+                )}
             </View>
 
             {/* category section */}
@@ -29,9 +122,11 @@ export default function createReportsScreen(){
                         style={styles.picker}
                     >
                         <Picker.Item label="Select a category..." value="" />
-                        <Picker.Item label="Safety" value="safety" />
-                        <Picker.Item label="Maintenance" value="maintenance" />
-                        <Picker.Item label="Damage" value="damage" />
+                        <Picker.Item label="Safety" value="Safety" />
+                        <Picker.Item label="Maintenance" value="Maintenance" />
+                        <Picker.Item label="Damage" value="Damage" />
+                        <Picker.Item label="Accessibility" value="Accessibility" />
+                        <Picker.Item label="Cleanliness" value="Cleanliness" />
                     </Picker>
                 </View>
             </View>
@@ -72,7 +167,7 @@ export default function createReportsScreen(){
                 <Text style={styles.saveButtonText}>Save Report</Text>
             </Pressable>
         </ScrollView>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -143,12 +238,75 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: '600',
     },
+    picker: {
+        color: '#1e2a3a',
+    },
+    previewImage: {
+        width: '100%',
+        height: 200,
+        borderRadius: 10,
+    },
+    retakeButton: {
+        marginTop: 10,
+        backgroundColor: '#1e2a3a',
+        borderRadius: 10,  
+        padding: 12,
+        alignItems: 'center',
+
+    },
+    retakeButtonText: {
+        color: '#fff',
+        borderRadius: 5,
+        textAlign: 'center',
+    },
+    cameraContainer: {
+        flex: 1,
+    },
+    camera: {
+        flex: 1,
+    },
+    cameraButtons: {
+        flexDirection: 'row',
+        backgroundColor: '#111827',
+        gap: 20,
+        padding: 20,
+    },
+
+    cancelButton: {
+        backgroundColor: '#6b7280',
+        padding: 15, 
+        borderRadius: 5,
+        flex: 1,
+        alignItems: 'center',   
+    },
+
+    cancelButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+
+    captureButton: {
+        backgroundColor: '#8c690a',
+        padding: 15,
+        borderRadius: 5,
+        flex: 1,
+        alignItems: 'center',
+    },
+
+    captureButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
+    },  
     textInput: {
         borderWidth: 1,
         borderColor: '#1e2a3a',
         borderRadius: 5,
         padding: 10,
         backgroundColor: 'white',
+        minHeight: 100,
+        textAlignVertical: 'top',
     },
     saveButton: {
         backgroundColor: '#1e2a3a',
@@ -167,8 +325,4 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         backgroundColor: '#ffffff',
     },
-    picker: {
-        color: '#1e2a3a',
-    },
-    
 });
