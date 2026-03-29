@@ -53,14 +53,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: '#f4f7fb',
+    backgroundColor: 'slategrey',
     padding: 24,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-    color:'#1e2a3a',
+    color:'white',
   },
   subtitle: {
     fontSize: 16,
