@@ -1,98 +1,126 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Text, View, StyleSheet, Pressable } from "react-native";
+import { useRouter } from 'expo-router';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
 
 export default function HomeScreen() {
+  const router = useRouter();
+
+  const totalReports = 8;
+  const openReports = 5;
+  const resolvedReports = 3;
+
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+    <View style={styles.container}>
+      <Text style ={styles.title}>GeoSnap Field Reporter</Text>
+      <Text style={styles.subtitle}> Capture field issues with photos, location, and map-based tracking.</Text>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
+      <View style={styles.statsContainer}>
+        <View style={styles.statBox}>
+          <Text style={styles.statNumber}>{totalReports}</Text>
+          <Text style={styles.statLabel}>Total Reports</Text>
+        </View>
+        <View style={styles.statBox}>
+          <Text style={styles.statNumber}>{openReports}</Text>
+          <Text style={styles.statLabel}>Open Reports</Text>
+        </View>
+        <View style={styles.statBox}>
+          <Text style={styles.statNumber}>{resolvedReports}</Text>
+          <Text style={styles.statLabel}>Resolved Reports</Text>
+        </View>
+      </View>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
+      <View style={styles.buttonGroup}>
+        <Pressable style={styles.button} onPress={() => router.push('/create-report')}>
+          <Text style={styles.buttonText}>Create Report</Text>
+        </Pressable>
 
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+        <Pressable style={styles.button} onPress={() => router.push('/map')}>
+          <Text style={styles.buttonText}>View Map</Text>
+        </Pressable>
+
+        <Pressable style={styles.button} onPress={() => router.push('/reports')}>
+          <Text style={styles.buttonText}>View Reports</Text>
+        </Pressable>
+
+      </View>
+    </View>
+
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: '#f4f7fb',
+    padding: 24,
   },
   title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color:'#1e2a3a',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#1e2a3a',
+    textAlign: 'center',
+    paddingHorizontal: 20,
+  },
+  statsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 30,
+    width: '100%',
+    paddingHorizontal: 20,
+  },
+  statBox: {
+    // alignItems: "center",
+    // marginHorizontal: 4,
+    // marginVertical: 10,
+    // backgroundColor: '#ffffff',
+    // padding: 20,
+    // borderRadius: 10,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.1,
+    // shadowRadius: 5,
+    // elevation: 3,
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    padding: 15,
+    borderRadius: 10,
+    elevation: 3,
+    marginHorizontal: 5,
+    marginVertical: 10,
+  },
+  statNumber: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: '#1e2a3a',
+  },
+  statLabel: {
+    fontSize: 12,
+    color: '#1e2a3a',
+    marginTop: 4,
     textAlign: 'center',
   },
-  code: {
-    textTransform: 'uppercase',
+  buttonGroup: {
+    gap: 10,
+    width: '100%',
+    paddingHorizontal: 20,
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  button: {
+    backgroundColor: '#1e2a3a',
+    paddingVertical: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: "bold",   
   },
 });
