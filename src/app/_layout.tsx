@@ -1,5 +1,10 @@
 import { Stack } from "expo-router";
+import { ReportProvider } from "../context/ReportContext";
 
 export default function RootLayout() {
-  return <Stack />;
+  return (
+    <ReportProvider>
+      <Stack />
+    </ReportProvider>
+  );
 }
