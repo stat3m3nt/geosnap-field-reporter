@@ -11,12 +11,16 @@ import {
 } from 'react-native'; 
 import { Picker } from '@react-native-picker/picker'; // for dropdown selection
 import { CameraView, useCameraPermissions } from 'expo-camera'; // for camera functionality 
-
+import { useRouter } from 'expo-router';   // for navigation between screens
+import { useReportContext } from '../context/ReportContext'; // for accessing report context
 
 export default function CreateReportsScreen(){
     const [category, setCategory] = useState('');
     const [severity, setSeverity] = useState('');
     const [notes, setNotes] = useState('');
+
+    const router = useRouter();
+    const { addReport } = useReportContext();
 
     const [photoURI, setPhotoURI] = useState<string | null>(null); // to store the URI of the captured photo
     const [showCamera, setShowCamera] = useState(false);
@@ -64,6 +68,33 @@ export default function CreateReportsScreen(){
     const retakePhoto = () => {
         setPhotoURI(null);
         setShowCamera(true);
+    };
+
+    const saveReport = () => {
+        if (!category || !severity || !notes.trim()) {
+            Alert.alert('Missing Information', 'Please select a category, severity, and provide notes for your report.');
+            return;
+        }
+        const newReport = {
+            id: Date.now().toString(),
+            title: `${category} Issue - ${severity} Severity`,
+            category,
+            severity,
+            notes,
+            photoURI,
+            status: "Open" as "Open" | "Resolved",
+            createdAt: new Date(),
+        };
+
+
+        addReport(newReport);
+        Alert.alert('Report Saved', 'Your report has been saved successfully.');
+
+        setCategory('');
+        setSeverity('');
+        setNotes('');
+        setPhotoURI(null);
+        router.push('/reports');
     };
 
     // show camera view if user wants to take a photo, otherwise show the form
@@ -163,7 +194,7 @@ export default function CreateReportsScreen(){
                 multiline />
             </View>
 
-            <Pressable style={styles.saveButton}>
+            <Pressable style={styles.saveButton} onPress={saveReport}>
                 <Text style={styles.saveButtonText}>Save Report</Text>
             </Pressable>
         </ScrollView>
@@ -256,7 +287,6 @@ const styles = StyleSheet.create({
     },
     retakeButtonText: {
         color: '#fff',
-        borderRadius: 5,
         textAlign: 'center',
     },
     cameraContainer: {
