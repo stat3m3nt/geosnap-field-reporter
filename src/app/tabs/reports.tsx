@@ -1,13 +1,11 @@
 import { View, StyleSheet, Text, FlatList, Image, Pressable} from 'react-native';
-import { useReportContext } from '../context/ReportContext';
-import { normalizeCSSTransitionProperties } from 'react-native-reanimated/lib/typescript/css/native';
-
+import { useReportContext } from '../../context/ReportContext';
 export default function ReportsScreen(){
     const { reports, updateReportStatus } = useReportContext();
 
     return(
         <View style={styles.container}>
-            <Text style={styles.title}> Saved Reports</Text>
+            <Text style={styles.title}>Saved Reports</Text>
 
             {reports.length === 0 ? (
                 <View style={styles.noReportsContainer}>
@@ -58,6 +56,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "bold",
         marginBottom: 10,
+        marginTop: 50,
+        padding: 10,
     },
     text: {
         fontSize: 16,
@@ -140,5 +140,5 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
     },
-    
+
 });

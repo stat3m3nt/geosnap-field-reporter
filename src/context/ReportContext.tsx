@@ -1,3 +1,8 @@
+/**
+ * "StAuth10244: I Andrew Evboifo, 000909727 certify that this material is my original work. 
+ * No other person's work has been used without due acknowledgement. I have not made my work available to anyone else."
+ */
+
 import { createContext, useContext, useState, ReactNode } from 'react';
 
 export type Report = {
@@ -7,15 +12,18 @@ export type Report = {
     severity: string;
     notes: string;
     photoURI: string | null;
-    status: 'Open' | 'Resolved';
+    status: ReportStatus;
+    latitude: number;
+    longitude: number;
     createdAt: Date;
+    
 
 };
 
 type ReportContextType = {
     reports: Report[];
     addReport: (report: Report) => void;
-    updateReportStatus: (id: string, status: 'Open' | 'Resolved') => void;
+    updateReportStatus: (id: string, status: ReportStatus) => void;
 };
 
 const ReportContext = createContext<ReportContextType | undefined>(undefined);

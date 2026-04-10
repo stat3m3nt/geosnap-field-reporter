@@ -1,3 +1,8 @@
+/**
+ * "StAuth10244: I Andrew Evboifo, 000909727 certify that this material is my original work. 
+ * No other person's work has been used without due acknowledgement. I have not made my work available to anyone else."
+ */
+
 import { useRef, useState } from 'react'; // for managing form state and references
 import { 
     View, 
@@ -12,7 +17,8 @@ import {
 import { Picker } from '@react-native-picker/picker'; // for dropdown selection
 import { CameraView, useCameraPermissions } from 'expo-camera'; // for camera functionality 
 import { useRouter } from 'expo-router';   // for navigation between screens
-import { useReportContext } from '../context/ReportContext'; // for accessing report context
+import { useReportContext } from '../../context/ReportContext'; // for accessing report context
+import * as Location from 'expo-location'; // for accessing device location
 
 export default function CreateReportsScreen(){
     const [category, setCategory] = useState('');
@@ -70,11 +76,40 @@ export default function CreateReportsScreen(){
         setShowCamera(true);
     };
 
-    const saveReport = () => {
+    const getCurrentLocation = async () => {
+        try {
+            const { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                Alert.alert('Permission Denied', 'Location access is required to attach location data to your reports.');
+                return null;
+            }
+
+            const location = await Location.getCurrentPositionAsync({});
+            return {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+            };
+        } catch (error) {
+            Alert.alert('Error', 'Failed to get location. Please try again.');
+            console.log(error);
+            return null;
+        }  
+    };
+
+
+
+    const saveReport = async () => {
         if (!category || !severity || !notes.trim()) {
             Alert.alert('Missing Information', 'Please select a category, severity, and provide notes for your report.');
             return;
         }
+
+        const location = await getCurrentLocation();
+
+        if(!location) {
+            return;
+        }
+        
         const newReport = {
             id: Date.now().toString(),
             title: `${category} Issue - ${severity} Severity`,
@@ -83,10 +118,13 @@ export default function CreateReportsScreen(){
             notes,
             photoURI,
             status: "Open" as "Open" | "Resolved",
+            latitude: location.latitude,
+            longitude: location.longitude,
             createdAt: new Date(),
         };
 
-
+        console.log('Saving report:', newReport);
+        
         addReport(newReport);
         Alert.alert('Report Saved', 'Your report has been saved successfully.');
 
@@ -94,7 +132,7 @@ export default function CreateReportsScreen(){
         setSeverity('');
         setNotes('');
         setPhotoURI(null);
-        router.push('/reports');
+        router.push('/tabs/reports');
     };
 
     // show camera view if user wants to take a photo, otherwise show the form
@@ -208,6 +246,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'slategray',
     },
     title:{
+        padding: 10,
         fontSize: 24,
         fontWeight: 'bold',
         color: 'white',

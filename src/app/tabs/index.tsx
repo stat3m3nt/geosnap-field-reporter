@@ -1,18 +1,28 @@
-import { Text, View, StyleSheet, Pressable } from "react-native";
-import { useRouter } from 'expo-router';
+/**
+ * "StAuth10244: I Andrew Evboifo, 000909727 certify that this material is my original work. 
+ * No other person's work has been used without due acknowledgement. I have not made my work available to anyone else."
+ */
+
+import { useRouter } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useReportContext } from "../../context/ReportContext";
 
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { reports } = useReportContext();
 
-  const totalReports = 8;
-  const openReports = 5;
-  const resolvedReports = 3;
+  const totalReports = reports.length;
+  const openReports = reports.filter((r) => r.status === "Open").length;
+  const resolvedReports = reports.filter((r) => r.status === "Resolved").length;
 
   return (
     <View style={styles.container}>
-      <Text style ={styles.title}>GeoSnap Field Reporter</Text>
-      <Text style={styles.subtitle}> Capture field issues with photos, location, and map-based tracking.</Text>
+      <Text style={styles.title}>GeoSnap Field Reporter</Text>
+      <Text style={styles.subtitle}>
+        {" "}
+        Capture field issues with photos, location, and map-based tracking.
+      </Text>
 
       <View style={styles.statsContainer}>
         <View style={styles.statBox}>
@@ -30,21 +40,28 @@ export default function HomeScreen() {
       </View>
 
       <View style={styles.buttonGroup}>
-        <Pressable style={styles.button} onPress={() => router.push('/create-report')}>
+        <Pressable
+          style={styles.button}
+          onPress={() => router.push("/tabs/create-report")}
+        >
           <Text style={styles.buttonText}>Create Report</Text>
         </Pressable>
 
-        <Pressable style={styles.button} onPress={() => router.push('/map')}>
+        <Pressable
+          style={styles.button}
+          onPress={() => router.push("/tabs/map")}
+        >
           <Text style={styles.buttonText}>View Map</Text>
         </Pressable>
 
-        <Pressable style={styles.button} onPress={() => router.push('/reports')}>
+        <Pressable
+          style={styles.button}
+          onPress={() => router.push("/tabs/reports")}
+        >
           <Text style={styles.buttonText}>View Reports</Text>
         </Pressable>
-
       </View>
     </View>
-
   );
 }
 
@@ -53,26 +70,26 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: 'slategrey',
+    backgroundColor: "slategrey",
     padding: 24,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-    color:'white',
+    color: "white",
   },
   subtitle: {
     fontSize: 16,
-    color: '#1e2a3a',
-    textAlign: 'center',
+    color: "#1e2a3a",
+    textAlign: "center",
     paddingHorizontal: 20,
   },
   statsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 30,
-    width: '100%',
+    width: "100%",
     paddingHorizontal: 20,
   },
   statBox: {
@@ -88,8 +105,8 @@ const styles = StyleSheet.create({
     // shadowRadius: 5,
     // elevation: 3,
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
+    alignItems: "center",
+    backgroundColor: "#ffffff",
     padding: 15,
     borderRadius: 10,
     elevation: 3,
@@ -99,28 +116,28 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 20,
     fontWeight: "bold",
-    color: '#1e2a3a',
+    color: "#1e2a3a",
   },
   statLabel: {
     fontSize: 12,
-    color: '#1e2a3a',
+    color: "#1e2a3a",
     marginTop: 4,
-    textAlign: 'center',
+    textAlign: "center",
   },
   buttonGroup: {
     gap: 10,
-    width: '100%',
+    width: "100%",
     paddingHorizontal: 20,
   },
   button: {
-    backgroundColor: '#1e2a3a',
+    backgroundColor: "#1e2a3a",
     paddingVertical: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   buttonText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 16,
-    fontWeight: "bold",   
+    fontWeight: "bold",
   },
 });
