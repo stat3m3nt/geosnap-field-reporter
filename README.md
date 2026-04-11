@@ -98,7 +98,7 @@ npx expo start
 * Press a
 
   
-##⚠️ Known Limitations
+## ⚠️ Known Limitations
 * Map does not work on web (react-native-maps is mobile-only)
 * Expo Go may show blank maps on newer SDK versions (SDK 55 issue)
 * Works best on:
@@ -141,7 +141,7 @@ npx expo start
 
 (demo-link coming)
 
-📂 Project Structure
+## 📂 Project Structure
 src/
 ├── app/
 │   ├── tabs/
