@@ -68,6 +68,20 @@ Users can:
 * Map View
 * Reports List
   
+## 📸 Screenshots
+
+### 🏠 Home Screen
+![Home](./assets/images/HomeScreen.jpg)
+
+### 📝 Create Report
+![Create Report](./assets/images/createReportsScreen.jpg)
+
+### 🗺️ Map View
+![Map](./assets/screenshots/map.jpg)
+
+### 📋 Reports List
+![Reports](./assets/images/savedReportsScreen.jpg)
+  
 ## ⚙️ Installation & Setup
 #### 1. Clone the repository
 ```
