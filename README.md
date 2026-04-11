@@ -142,6 +142,7 @@ npx expo start
 (demo-link coming)
 
 ## 📂 Project Structure
+```
 src/
 ├── app/
 │   ├── tabs/
@@ -175,7 +176,7 @@ src/
 │
 ├── utils/
 │   └── reportHelpers.ts
-
+```
 ## 👤 Author
 Andrew Evboifo
 📍 Ontario, Canada
