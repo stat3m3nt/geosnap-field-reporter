@@ -71,13 +71,10 @@ Users can:
 ## 📸 Screenshots
 
 ### 🏠 Home Screen
-![Home](./assets/images/HomeScreen.jpg)
+![Home](./assets/images/HomeScreen.jpeg)
 
 ### 📝 Create Report
-![Create Report](./assets/images/createReportsScreen.jpg)
-
-### 🗺️ Map View
-![Map](./assets/screenshots/map.jpg)
+![Create Report](./assets/images/createReportsScreen.jpeg)
 
 ### 📋 Reports List
 ![Reports](./assets/images/savedReportsScreen.jpg)
